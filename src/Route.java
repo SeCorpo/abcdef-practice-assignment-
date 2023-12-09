@@ -3,13 +3,17 @@ import java.util.ArrayList;
 
 public class Route
 {
+   public ArrayList<StopOver> getStopOvers() {
+      return stopOvers;
+   }
+
    private final ArrayList<StopOver> stopOvers = new ArrayList<>();
 
    ///////////////////////////////////////////////////////////////
    ///////////////////////////////////////////////////////////////
    public Route( Location beginLocation, LocalTime departure )
    {
-      var stopover = new StopOver( beginLocation.getName(), null, departure );
+      StopOver stopover = new StopOver( beginLocation.getName(), departure, departure );
       stopOvers.add( stopover );
    }
 
@@ -25,7 +29,7 @@ public class Route
    ///////////////////////////////////////////////////////////////
    public void addEndPoint( Location loc, LocalTime arrival )
    {
-      var stopover = new StopOver( loc.getName(), arrival, null );
+      var stopover = new StopOver( loc.getName(), arrival, arrival );
       stopOvers.add( stopover );
    }
 
@@ -52,12 +56,19 @@ public class Route
 
    ///////////////////////////////////////////////////////////////
    ///////////////////////////////////////////////////////////////
-   public void write()
-   {
-      var first = stopOvers.get( 0 );
-      var last  = stopOvers.get( stopOvers.size() - 1 );
+   public void write() {
 
-      System.out.format( "route: %s, dep. %s at %s; arr. %s at %s\n", getKey(),
-                         first.getName(), first.getDeparture(), last.getName(), last.getArrival() );
+      var first = stopOvers.get(0);
+      var last = stopOvers.get(stopOvers.size() - 1);
+
+      System.out.format("%-6s [%-13s] %-4s %-10s %-2s %-2s %-5s %-4s %-8s %-2s %-2s %-5s\n", "Route:", getKey(), " ", "Departure: ", first.getName(), "at ",
+              first.getDeparture(), " ", "Arrival: ", last.getName(), "at ", last.getArrival());
+
+      if (first.getName() == null) {
+         System.out.println("The begin location cannot be found.");
+      } else if (last.getName() == null) {
+         System.out.println("The end location cannot be found.");
+      }
    }
+
 }
